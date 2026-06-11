@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrivSocial</title>
+  <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
+</head>
+<body class="body-load">
+   <div class="secure-button" id="secure-button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 16 16"><path fill="#000000" d="M15 0L8 2L1 0S.93.808 1 2l7 2.189L15 2c.07-1.192 0-2 0-2zM1.128 3.049C1.503 6.966 2.901 13.553 8 16c5.099-2.448 6.497-9.034 6.872-12.951L8 5.633L1.128 3.049z"/></svg>
+   </div>
+   <div id="account-btns" class="account-btns">
+     <div class="create-acc" id="create-acc">
+        <p>Create Account</p>
+     </div>
+     <div class="sign-in" id="sign-in">
+        <p>Sign In</p>
+     </div>
+   </div>
+
+   <p class="tittle">PrivSocial</p>
+   <script>
+     const secure_btn = document.getElementById('secure-button');
+     const account_btns = document.getElementById('account-btns');
+     const create_btn = document.getElementById('create-acc');
+
+     secure_btn.classList.add('active');
+     secure_btn.addEventListener("click",()=>{
+       secure_btn.classList.add('in-load');
+       setTimeout(()=>{
+        secure_btn.classList.remove('in-load');
+        secure_btn.classList.remove('active');
+         account_btns.classList.add('active');
+
+     }, 1500);
+     });
+
+     create_btn.addEventListener("click", ()=> {
+       window.location.href = "/create-account"
+     });
+   </script>
+</body>
+</html>
