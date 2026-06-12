@@ -4,9 +4,81 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Feed</title>
-  <link rel="" type="" href="{url_for('static', filename='css/styles.css')}">
+  <link rel="stylesheet" type="" href="{{url_for('static', filename='css/styles.css')}}">
 </head>
-<body>
-   <h1>Hello {{username}}</h1>
+<body class="body-feed">
+  <p>{{username}} | {{mail}}</p>
+  <nav id="nav-bar" class="nav-bar">
+    
+    <ul class="nav-links" id="nav-links">
+      <li class="home"><svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 20 20"><path fill="#87fefe" fill-rule="evenodd" d="M1 11C.08 11-.352 9.863.336 9.253l9-8a1 1 0 0 1 1.328 0l9 8C20.352 9.863 19.92 11 19 11h-1v7a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-7H1Zm6 6v-5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v5h3v-7a1 1 0 0 1 .512-.873L10 3.337l-6.512 5.79A1 1 0 0 1 4 10v7h3Zm2 0v-4h2v4H9Z" clip-rule="evenodd"/></svg></li>
+      <li></li>
+      <li id="add-post"><svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><path fill="#87fefe" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10s10-4.477 10-10S17.523 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg></li>
+      <li></li>
+      <li></li>
+    </ul>
+    <div class="profile-pic" id="profile-pic">
+      <img src="" alt="">
+    </div>
+  </nav>
+    <div class="feed-container" id="feed-container">
+
+    </div>
+
+    <div class="pop-up-post" id="pop-up-post">
+      <form action="/create-posts" method="post">
+        <label for="tittle">Post Tittle:</label>
+        <input type="text" name="titlle" id="tittle">
+        <label for="content">Content:</label>
+        <textarea rows="4" cols="4" id="content" name="content"></textarea>
+        <label for="add-pass">Add password?</label>
+        <input type="checkbox" name="yesPass" id="yesPass">
+        <div class="pass-post-container" id="pass-post-container">
+          <label for="password">Enter a password:</label>
+          <input type="text" name="password" id="password">          
+        </div>
+        <button type="button" id="add_post_btn">Add Post</button>
+      </form>
+    </div>
+<script>
+  const add_post = document.getElementById('add-post');
+  const addpost_form = document.getElementById('pop-up-post');
+  const tittle = document.getElementById('tittle');
+  const content = document.getElementById('content');
+  const pass = document.getElementById('password');
+  const add_post_btn = document.getElementById('add_post_btn');
+  const feed_container = document.getElementById('feed-container');
+  add_post.addEventListener("click", ()=> {
+      addpost_form.classList.add('active');
+  });
+
+  add_post_btn.addEventListener("click", async (e) => {
+    
+
+    const response = await fetch(`/create-posts`, {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({
+        "tittle":tittle.value,
+        "content":content.value,
+        "pass":pass.value
+      })
+    });
+
+    const data = await response.json();
+
+    if(data.success){
+       const post = document.createElement('div');
+       post.className = 'post';
+       post.innerText= '{{post}}';
+       feed_container.appendChild(post);
+    }else{
+      alert("dont");
+    }
+  });
+
+</script>
 </body>
 </html>

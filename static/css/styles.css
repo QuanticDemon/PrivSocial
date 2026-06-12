@@ -168,3 +168,73 @@ html{
   transform: translate(-50%, -50%);
   display: flex;
 }
+
+.body-feed{
+  margin: 0;
+  background-color: #071445;
+  border: 2px solid cyan;
+  min-height: 100%;
+}
+
+.nav-bar{
+  padding: 5px;
+  background-color: black;
+  color: white;
+  display: flex;
+  height: 50px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 9999;
+
+}
+
+.nav-links{
+  display: flex;
+  list-style: none;
+  gap: 10px;
+}
+
+.nav-links svg{
+ width: 30px;
+ height: 30px;
+}
+
+.feed-container{
+  background: white;
+  width: min(900,95%);
+  min-height: 100%;
+  margin-top: 30px;
+  color: black;
+  display: grid;
+  justify-content: center;
+  align-items: center; 
+  gap: 20px;
+}
+
+.pop-up-post{
+  visibility: hidden;
+  opacity: 0;
+  width: min(500, 80%);
+  aspect-ratio: 1;
+  background: rgba(255, 255, 255, 0.40);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 10px;
+  transition: opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1),
+  visibility 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.pop-up-post.active{
+  visibility: visible;
+  opacity: 1;
+}
+
+.post{
+  width: max-content;
+  height: max-content;
+  background-color: blue;
+  color: white;
+
+
+}

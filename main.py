@@ -10,28 +10,64 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///privsocial.db"
 
 db = SQLAlchemy(app)
 
-class Users(db.Model):
-    id = db.Column(
+
+class Posts(db.Model):
+    id_post = db.Column(
         db.String(36),
-        primary_key = True,
-        default=lambda:str(uuid.uuid4())
-    )
-    username = db.Column(
-        db.String(50),
-        nullable=False,
-        unique = True
+        primary_key=True,
+        default=lambda: str(uuid.uuid4())
     )
 
-    mail = db.Column(
-        db.String(120),
-        nullable = False,
-        unique = True
-    )
-
-    password = db.Column(
-        db.String(200),
+    tittle = db.Column(
+        db.String(100),
         nullable = False
     )
+
+    content = db.Column(
+        db.Text, 
+        nullable = False
+    )
+
+
+    post_pass = db.Column(
+        db.String(200),
+        nullable = True
+    )
+
+
+    @classmethod
+
+    def creation_post(cls,tittle, content, password):
+       pass_encode = password.encode('utf-8')
+       salts = bcrypt.gensalt(rounds=12)
+       hash_pass = bcrypt.hashpw(pass_encode, salts)
+       hash_passToString = hash_pass.decode('utf-8')
+       new_post = cls(tittle=tittle, content=content, post_pass=hash_passToString)
+       db.session.add(new_post)
+       db.session.commit()
+
+       return new_post
+
+class Users(db.Model):
+    id = db.Column(
+            db.String(36),
+            primary_key = True,
+            default=lambda:str(uuid.uuid4())
+        )
+    username = db.Column(
+            db.String(50),
+            nullable=False,
+            unique = True
+        )
+    mail = db.Column(                                                db.String(120),
+             nullable = False,
+             unique = True
+        )
+    password = db.Column(
+            db.String(200),
+            nullable = False
+        )
+
 
     @classmethod
     def create_user(cls, username, mail, password):
@@ -79,7 +115,7 @@ def inject_data():
     id = session.get('user_id')
     name = session.get('username')
     mail = session.get('mail')
-
+    
     return{
         "username":name,
         "id":id,
@@ -89,9 +125,27 @@ def inject_data():
 
 @app.route('/feed', methods=["GET", "POST"])
 def feed():
-    
+    user_id = session.get('user_id') 
 
+    if user_id is None:
+        return redirect(url_for('sign_in'))
+
+        
     return render_template("feed.html")
+
+@app.route('/create-posts',methods=["GET", "POST"])
+def create_posts():
+    data = request.get_json()
+    tittle=data.get('tittle')
+    content=data.get('content')
+    password_post=data.get('pass')
+
+    post = Posts.creation_post(tittle, content, None if password_post == "" else password_post)
+
+    return {
+            "success":True,
+            "post":post.tittle
+            }
 
 @app.route('/load', methods=["GET", "POST"])
 def load():
@@ -115,7 +169,8 @@ def create_account():
             }
         
         return {
-            "success":True
+            "success":True,
+            "username":user.username
         }
 
 
