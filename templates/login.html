@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
+</head>
+<body class="body-create">
+  <div class="form-container" id="login-container">
+     <form id='login-form' method="post" action="/sign-in">
+       <h1>Create Account</h1>
+       <label for="userToken">Enter your username or email:</label>
+       <input type="text" name="userToken" id="username-login">
+       <span id="tag-name-input-lg" class="tag">
+         Please, enter an username!
+       </span>
+       <label for="password">Enter an password:</label>
+       <input type="password" name="password" id="password-login">
+      <span class="tag" id="tag-pass-input-lg">Enter a password!</span>
+      <button type="button" id="button-sub-lg">Create Account</button>
+     </form>
+  </div>
+  <script>
+    const button_submit = document.getElementById('button-sub-lg');
+    const username_field = document.getElementById('username-login');
+   
+    const pass_field = document.getElementById('password-login');
+    const tag_name = document.getElementById('tag-name-input-lg');
+    
+    const tag_pass = document.getElementById('tag-pass-input-lg');
+    button_submit.addEventListener('click', async (e)=> {
+      e.preventDefault();
+      if(username_field.value == ""){
+         tag_name.classList.add('active');
+      }
+      if(pass_field.value == ""){
+        tag_pass.classList.add('active');
+      }
+      tag_name.classList.remove('active');
+
+      const response = await fetch(`/sign-in`, {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body: JSON.stringify({
+          "userToken":username_field.value,
+          "password":pass_field.value
+        })
+      });
+
+      const data = await response.json();
+      if (data.success == true) {
+        window.location.href = `/feed`;
+      }
+      else{
+        console.log('error');
+      }
+
+    });
+  </script>
+</body>
+</html>

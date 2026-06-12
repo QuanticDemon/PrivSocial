@@ -24,6 +24,7 @@
      const secure_btn = document.getElementById('secure-button');
      const account_btns = document.getElementById('account-btns');
      const create_btn = document.getElementById('create-acc');
+     const sing_in = document.getElementById('sign-in')
 
      secure_btn.classList.add('active');
      secure_btn.addEventListener("click",()=>{
@@ -38,6 +39,9 @@
 
      create_btn.addEventListener("click", ()=> {
        window.location.href = "/create-account"
+     });
+     sing_in.addEventListener("click", ()=> {
+       window.location.href = "/sign-in"
      });
    </script>
 </body>

@@ -8,7 +8,7 @@
 </head>
 <body class="body-create">
   <div class="form-container" id="create-container">
-     <form id='create-form' >
+     <form id='create-form' method="post">
        <h1>Create Account</h1>
        <label for="username">Enter an username:</label>
        <input type="text" name="username" id="username">
@@ -17,7 +17,7 @@
        </span>
        <label for="mail">Enter your email:</label>
        <input type="text" name="mail" id="mail">
-       <span id="tag-mail-input-ac" class="tag">Please, enter an username</span>
+       <span id="tag-mail-input-ac" class="tag">Please, enter an email</span>
        <label for="password">Enter an password:</label>
        <input type="password" name="password" id="password">
       <span class="tag" id="tag-pass-input-ac">Enter a password!</span>
@@ -32,8 +32,8 @@
     const tag_name = document.getElementById('tag-name-input-ac');
     const tag_mail = document.getElementById('tag-mail-input-ac');
     const tag_pass = document.getElementById('tag-pass-input-ac');
-    button_submit.addEventListeners('click', ()=> {
-    
+    button_submit.addEventListener('click', async (e)=> {
+      e.preventDefault();
       if(username_field.value == ""){
          tag_name.classList.add('active');
       }
@@ -42,6 +42,27 @@
       }
       if(pass_field.value == ""){
         tag_pass.classList.add('active');
+      }
+      tag_name.classList.remove('active');
+
+      const response = await fetch(`/create-account`, {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body: JSON.stringify({
+          "username":username_field.value,
+          "mail":mail_field.value,
+          "password":pass_field.value
+        })
+      });
+
+      const data = await response.json();
+      if (data.success == true) {
+        window.location.href = `/feed`;
+      }
+      else{
+        console.log('error');
       }
 
     });
