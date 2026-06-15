@@ -167,6 +167,8 @@ html{
   border: 2px solid rgb(0, 217, 255);
   transform: translate(-50%, -50%);
   display: flex;
+ 
+
 }
 
 .body-feed{
@@ -174,6 +176,8 @@ html{
   background-color: #071445;
   border: 2px solid cyan;
   min-height: 100%;
+  
+  
 }
 
 .nav-bar{
@@ -192,7 +196,7 @@ html{
 .nav-links{
   display: flex;
   list-style: none;
-  gap: 10px;
+  gap: 6rem;
 }
 
 .nav-links svg{
@@ -201,25 +205,62 @@ html{
 }
 
 .feed-container{
-  background: white;
-  width: min(900,95%);
-  min-height: 100%;
+  background: rgba(255,255,255,0.40);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  width: 95%;
+  min-height: 100vh;
+  visibility: hidden;
+  opacity: 0;
+  overflow-y: auto;
   margin-top: 30px;
   color: black;
-  display: grid;
-  justify-content: center;
+  display: flex;
+  margin: 30px auto;
+  
   align-items: center; 
   gap: 20px;
+  
+ 
+ 
+   flex-direction: column;
 }
+.feed-container.active{
+  background: rgba(255,255,255,0.40);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  width: 95%;
+  min-height: 100vh;
+  visibility:visible;
+  opacity: 1;
+  overflow-y: auto;
+  margin-top: 30px;
+  color: black;
+  display: flex;
+  margin: 30px auto;
+  
+  align-items: center; 
+  gap: 20px;
+  
+ 
+ 
+   flex-direction: column;
+}
+
 
 .pop-up-post{
   visibility: hidden;
   opacity: 0;
-  width: min(500, 80%);
+  width: 60%;
   aspect-ratio: 1;
   background: rgba(255, 255, 255, 0.40);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  border: 4px solid rgb(120, 246, 255);
+  transform: translate(-50%, -50%);
   padding: 10px;
   transition: opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1),
   visibility 1s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -230,11 +271,121 @@ html{
   opacity: 1;
 }
 
-.post{
-  width: max-content;
-  height: max-content;
-  background-color: blue;
-  color: white;
+.pop-up-post textarea{
+  width: 100%;
+  height: 30vh;
+}
 
+.post{
+  width: 98%;
+  padding: 30px;
+  min-height: 30vh;
+  max-height: max-content;
+  background-color: rgb(255, 255, 255);
+  color: black;
+  box-sizing: border-box;
+  margin-top: 20px;
 
 }
+
+.image-post img{
+  max-width: 98%;
+}
+
+.pass-post-container{
+  visibility: hidden;
+  opacity: 0;
+  position: relative;
+  transition: visibility 1s cubic-bezier(0.075, 0.82, 0.165, 1),
+  opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.pass-post-container.active{
+  visibility: visible;
+  opacity: 1;
+}
+
+.account_page > *{
+  visibility: hidden;
+  opacity: 0;
+  background-color: white;
+  width: 100%;
+  min-height: 100%;
+  height: 1000vh;
+
+
+  transition: visibility 1s cubic-bezier(0.075, 0.82, 0.165, 1),
+  opacity 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+  z-index: 9000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.account_page.active > *{
+  visibility: visible;
+  opacity: 1;
+  
+}
+
+.account_page.active .change_picture{
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translate(-50%, 10px);
+  width: 200px;
+  height: 50px;
+  border-radius: 10px;
+  background-color: rgb(12, 29, 66);
+  color: rgb(28, 255, 191);
+  text-align: center;
+  border: 1.5px solid rgb(28, 255, 191);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.5s ease;
+}
+
+.account_page.active .change_picture:hover{
+  position: absolute;
+  top: 10px;
+  left: 50%;
+ 
+  width: 200px;
+  height: 50px;
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+  color: rgb(12, 29, 66);
+  text-align: center;
+  border: 1.5px solid rgb(12, 29, 66);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translateY(-10px), translate(-50%, 10px);
+  cursor: pointer;
+}
+
+.account_page.active .change_picture #user-picture{
+  opacity: 0;
+  position:absolute;
+  width: 150px;
+  height: 45px;
+  cursor: pointer;
+}
+
+.account_page.active .user-image{
+  width: 200px;
+  height: 200px;
+  border: 5px solid rgb(28, 255, 191);
+  background-color: #191f35;
+  position: absolute;
+  border-radius: 50%;
+  top: 50px;
+  left: 50%;
+  transform: translate(-50%, 50px);
+
+}
+
