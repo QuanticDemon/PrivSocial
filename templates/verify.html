@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
+</head>
+<body>
+    <div id="auth-container" class="auth-container">
+        <h1>Verify your email</h1>
+        <p>We send a email to the mail 'Quanticdemon@gmail.com', please verify and enter the code in the squares, thanks.</p>
+
+        <form action="" method="post" id="auth-form" class="auth-form">
+            <input type="text" name="" id="" class="codes" maxlength="1"><input type="text" name="" id="" class="codes" maxlength="1"><input type="text" name="" id="" class="codes"maxlength="1"><input type="text" name="" id="" class="codes"maxlength="1"><input type="text" name="" id="" class="codes"maxlength="1"><input type="text" name="" id="" class="codes"maxlength="1">
+        </form>
+    </div>
+    <script>
+        const inputs = document.querySelectorAll('.codes');
+
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', ()=>{
+                if(input.value.length ===1 && inputs[index+1]){
+                    inputs[index+1].focus();
+                }
+            });
+
+            input.addEventListener('keydown', (e)=>{
+                if(e.key === "Backspace"){
+                    input.value = "";
+                    inputs[index-1].focus();
+                }
+            });
+
+            input.addEventListener('keydown', (e)=>{
+                if(e.key === "Enter" && index ===5 ||  index>4 && index<5){
+                    alert("Ok");
+                }
+            });
+        }); 
+    </script>
+</body>
+</html>

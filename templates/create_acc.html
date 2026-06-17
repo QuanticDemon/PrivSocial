@@ -16,7 +16,7 @@
          Please, enter an username!
        </span>
        <label for="mail">Enter your email:</label>
-       <input type="text" name="mail" id="mail">
+       <input type="email" name="mail" id="mail" required>
        <span id="tag-mail-input-ac" class="tag">Please, enter an email</span>
        <label for="password">Enter an password:</label>
        <input type="password" name="password" id="password">
@@ -32,6 +32,8 @@
     const tag_name = document.getElementById('tag-name-input-ac');
     const tag_mail = document.getElementById('tag-mail-input-ac');
     const tag_pass = document.getElementById('tag-pass-input-ac');
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
     button_submit.addEventListener('click', async (e)=> {
       e.preventDefault();
       if(username_field.value == ""){
@@ -39,6 +41,11 @@
       }
       if(mail_field.value == ""){
         tag_mail.classList.add('active');
+      }
+
+      if(!emailRegex.test(mail_field.value)){
+        tag_pass.innerText = "Ingrese un email valido";
+        tag_pass.classList.add('active');
       }
       if(pass_field.value == ""){
         tag_pass.classList.add('active');

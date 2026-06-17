@@ -7,6 +7,7 @@ from sqlalchemy import  or_, func
 import uuid 
 import bcrypt
 import os
+from sqlalchemy.exc import IntegrityError
 app = Flask(__name__)
 app.secret_key = "dkaokoqwkj190j329jd9xn2i398d9283"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///privsocial.db"
@@ -86,6 +87,11 @@ class Users(db.Model):
         nullable = True
     )
 
+    verified = db.Column(
+        db.Boolean,
+        default = False
+    )
+
 
     @classmethod
     def create_user(cls, username, mail, password):
@@ -99,9 +105,14 @@ class Users(db.Model):
             password = hash_toString
 
         )
+        try:
+            db.session.add(user)
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
 
-        db.session.add(user)
-        db.session.commit()
+            return False
+       
         return user
     @classmethod
     def consult_user(cls, userToken, passwordConsult):
@@ -146,10 +157,18 @@ class Users(db.Model):
             session['username'] = username
         if mail is not None:
             userUpdate.mail = mail
-            db.session.commit()
+           
+            try:
+                db.session.commit()
+            except IntegrityError:
+                return jsonify({"error": True})
             session['mail'] = mail
         if password:
-            userUpdate.password = mail
+            hashing = password.encode('utf-8')
+            salts = bcrypt.gensalt(rounds=12)
+            pass_priv = bcrypt.hashpw(hashing, salts)
+            pass_priv_string = pass_priv.decode('utf-8')
+            userUpdate.password = pass_priv_string
             db.session.commit()
     
 
@@ -188,8 +207,8 @@ def inject_data():
         "username":name,
         "id":user_id,
         "mail": mail,
-        "picture":user.user_picture if user else None
-
+        "picture":user.user_picture if user else None,
+        "verified":user.verified if user else None
 
     }
 
@@ -240,16 +259,8 @@ def create_posts():
 
 @app.route('/user-changes', methods=["GET", "POST"])
 def user_changes():
-    print("Headers:", request.headers)
-    print("Content-Type:", request.content_type)
-    print("Form:", request.form)
-    print("Files:", request.files)
-    print("JSON:", request.get_json(silent=True))
-    if request.is_json:
-        data = request.get_json();
-        newUsername = data.get('new-username')
-        newMail = data.get('new-mail')
-        newPass = data.get('new-pass')
+    
+    
     userPhoto = request.files.get('userpic')
 
 
@@ -264,16 +275,30 @@ def user_changes():
 
     
     user = Users.update_photo(None if userPhoto == None else filename)
-    userUpdateData = Users.update_data(None if newUsername == session.get('username') else newUsername, None if newMail == session.get('mail') else newMail, newPass)
+    
     if not user:
         return {"success":False}
-    if not userUpdateData:
-        return {"success2":False}
+    
     return jsonify({
         "success":True,
-        "success2":True
+       
     })
 
+@app.route('/user-changes/user-data', methods=["GET", "POST"])
+def user_changes_data():
+    if request.is_json:
+        data = request.get_json();
+        newUsername = data.get('new-username')
+        newMail = data.get('new-mail')
+        newPass = data.get('new-pass')
+    userUpdateData = Users.update_data(None if newUsername == session.get('username') else newUsername, None if newMail == session.get('mail') else newMail, newPass)
+
+    if not userUpdateData:
+        return {"success":False}
+
+    return jsonify({
+        "success":True
+    })
 @app.route('/load', methods=["GET", "POST"])
 def load():
     return render_template("load.html")
@@ -287,6 +312,9 @@ def create_account():
         name = data['username']
         mail = data['mail']
         password = data['password']
+        password = password.replace(" ","").strip().lower()
+
+       
 
         user = Users.create_user(name,mail,password)
 
@@ -296,8 +324,7 @@ def create_account():
             }
         
         return {
-            "success":True,
-            "username":user.username
+            "success":True
         }
 
 
@@ -331,7 +358,9 @@ def sign_in():
 
     return render_template('login.html')
     
-
+@app.route('/create-account/verification', methods=["GET", "POST"])
+def verify_email_via():
+    return render_template("verify.html")
 
 
 if __name__ == "__main__":

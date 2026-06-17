@@ -187,6 +187,7 @@ html{
   display: flex;
   height: 50px;
   position: fixed;
+  justify-content: center;
   bottom: 0;
   width: 100%;
   z-index: 9999;
@@ -196,19 +197,32 @@ html{
 .nav-links{
   display: flex;
   list-style: none;
-  gap: 2.5rem;
+  gap: 4rem;
 }
 
-.nav-links svg, img{
+.nav-links svg{
  width: 30px;
  height: 30px;
+ transition: all 0.5s ease;
+ cursor: pointer;
+}
+
+.nav-links svg:hover path{
+  fill: rgb(68, 154, 185);
 }
 .nav-links img{
   width: 30px;
   height: 30px;
   border-radius: 50%;
   border: 2px solid rgb(28, 255, 191);
+  transition: all 0.5s ease;
 }
+
+.nav-links img:hover{
+  filter: blur(2px);
+  cursor: pointer;
+}
+
 
 .feed-container{
   background: rgba(255,255,255,0.40);
@@ -254,6 +268,7 @@ html{
 }
 
 
+
 .pop-up-post{
   visibility: hidden;
   opacity: 0;
@@ -295,7 +310,10 @@ html{
 }
 
 .image-post img{
-  max-width: 98%;
+  max-width: 95%;
+  min-width: 200px;
+  min-height: 200px;
+
 }
 
 .pass-post-container{
@@ -348,9 +366,10 @@ html{
   gap: 20px;
   align-items: center; 
 
-  margin-top: 50%;
-  
-  position: relative;
+  margin-top: 20%;
+  left: 50%;
+  transform: translate(-50%,0);
+  position: absolute;
 }
 .account_page.active .form-updater input{
 
@@ -473,5 +492,114 @@ html{
    z-index: 9000;
 }
 
+/*verify page*/
+.auth-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%,-10%);
+  flex-direction: column;
+
+}
+
+.auth-form{
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  gap: 15px;
+}
+
+.auth-form input{
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 30px;
+  text-align: center;
+  font-weight: bolder;
+}
 
 
+
+
+@media (min-width: 1024px) {
+   
+  
+
+  .nav-links{
+    
+    gap: 15rem !important;
+  }
+
+  .nav-links svg{
+  width: 30px;
+  height: 30px;
+  }
+  .nav-links img{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid rgb(28, 255, 191);
+  }
+
+
+.account_page.active .form-updater{
+ 
+  left: 50%;
+  transform: translate(-50%, 0);
+  margin-top: 10% !important;
+  position: absolute !important;
+
+}
+.account_page.active .form-updater input{
+
+  border: 2px solid rgb(28, 255, 191);
+  border-radius: 10px;
+  padding: 15px;
+  color: rgb(12, 29, 66);
+}
+.account_page.active .form-updater button{
+ background-color: rgb(12, 29, 66);
+ border-radius: 15px;
+ border: 1.5px solid rgb(28, 255, 191);
+ width: 200px;
+ height: 50px;
+ font-size: 18px;
+ color: rgb(28, 255, 191);
+ transition: all 0.5s ease;
+}
+.account_page.active .form-updater button:hover{
+  background-color: white;
+  color: rgb(28, 255, 191);
+  border: 2px solid rgb(28, 255, 191);
+}
+
+.field{
+  width: 100%;
+}
+
+.input-group{
+  display: flex;
+  align-items: center;
+  gap: 10%;
+
+}
+
+.input-group input{
+  flex: 1;
+}
+
+}
+
+/* PANTALLA DIVIDIDA MEDIANA: Entre 768px y 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .nav-bar {
+    background-color: #071499; /* Azul temporal solo para probar */
+  }
+  .nav-links {
+    gap: 4rem; /* Un poco más de espacio que en móvil, pero menos que en PC */
+  }
+}

@@ -154,12 +154,14 @@
   const feed_container = document.getElementById('feed-container');
   const account_btn = document.getElementById('account');
   const account_block = document.getElementById('account_page');
- 
+  document.getElementById('current-username').disabled = true;
+  document.getElementById('current-mail').disabled = true;
+  document.getElementById('current-password').disabled = true;
   let active_changes = false;
 
   document.getElementById('update-data').addEventListener("click", async (e) => {
     e.preventDefault();
-    const response = await fetch(`/user-changes`, {
+    const response = await fetch(`/user-changes/user-data`, {
         method:"POST",
         headers:{
           "Content-Type":"application/json"
@@ -174,7 +176,7 @@
 
     const dataUpdateUser = await response.json();
 
-    if(dataUpdateUser.success2){
+    if(dataUpdateUser.success){
       window.location.reload();
 
     }
