@@ -131,9 +131,29 @@ class Users(db.Model):
     def update_photo(cls, filename):
         userUpdatePhoto = db.session.get(cls, session.get("user_id"))
         userUpdatePhoto.user_picture = filename
+        db.session.add(userUpdatePhoto)
         db.session.commit()
-
+        
         return userUpdatePhoto
+
+    @classmethod
+    def update_data(cls, username, mail, password):
+        userUpdate = db.session.get(cls, session.get("user_id"))
+
+        if username is not None:
+            userUpdate.username = username
+            db.session.commit()
+            session['username'] = username
+        if mail is not None:
+            userUpdate.mail = mail
+            db.session.commit()
+            session['mail'] = mail
+        if password:
+            userUpdate.password = mail
+            db.session.commit()
+    
+
+        return userUpdate
 class Bridge(db.Model):
 
     id_bridge = db.Column(
@@ -158,27 +178,32 @@ class Bridge(db.Model):
 
 @app.context_processor
 def inject_data():
+    user=None
     user_id = session.get('user_id')
     name = session.get('username')
     mail = session.get('mail')
-    
-    user = Users.query.filter_by(id = user_id).first()
+    if 'user_id' in session: 
+        user = Users.query.filter(Users.id == user_id).first()
     return{
         "username":name,
-        "id":id,
+        "id":user_id,
         "mail": mail,
-        "user":user
+        "picture":user.user_picture if user else None
+
 
     }
 
 @app.route('/feed', methods=["GET", "POST"])
 def feed():
+
     user_id = session.get('user_id') 
-    user_posts = Bridge.query.order_by(func.random()).all()
+    user_posts = Bridge.query.filter_by(
+                id_user=user_id).order_by(func.random()).all()
     if user_id is None:
+        
         return redirect(url_for('sign_in'))
 
-        
+    
     return render_template("feed.html", user_posts = user_posts)
 
 @app.route('/create-posts',methods=["GET", "POST"])
@@ -215,7 +240,19 @@ def create_posts():
 
 @app.route('/user-changes', methods=["GET", "POST"])
 def user_changes():
+    print("Headers:", request.headers)
+    print("Content-Type:", request.content_type)
+    print("Form:", request.form)
+    print("Files:", request.files)
+    print("JSON:", request.get_json(silent=True))
+    if request.is_json:
+        data = request.get_json();
+        newUsername = data.get('new-username')
+        newMail = data.get('new-mail')
+        newPass = data.get('new-pass')
     userPhoto = request.files.get('userpic')
+
+
 
     if userPhoto:
         extension = os.path.splitext(userPhoto.filename)[1]
@@ -223,15 +260,18 @@ def user_changes():
 
         path = os.path.join('static/userpic', filename)
         userPhoto.save(path)
+
+
     
     user = Users.update_photo(None if userPhoto == None else filename)
-
+    userUpdateData = Users.update_data(None if newUsername == session.get('username') else newUsername, None if newMail == session.get('mail') else newMail, newPass)
     if not user:
-        return {"success:False"}
-
+        return {"success":False}
+    if not userUpdateData:
+        return {"success2":False}
     return jsonify({
         "success":True,
-        "userData": user
+        "success2":True
     })
 
 @app.route('/load', methods=["GET", "POST"])

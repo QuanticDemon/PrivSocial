@@ -7,7 +7,7 @@
   <link rel="stylesheet" type="" href="{{url_for('static', filename='css/styles.css')}}">
 </head>
 <body class="body-feed">
-  
+   
   <nav id="nav-bar" class="nav-bar">
     
     <ul class="nav-links" id="nav-links">
@@ -23,7 +23,11 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 1024 1024"><path fill="#87fefe" d="M512 1024q-104 0-199-40.5t-163.5-109T40.5 711T0 512t40.5-199t109-163.5T313 40.5T512 0t199 40.5t163.5 109t109 163.5t40.5 199t-40.5 199t-109 163.5t-163.5 109t-199 40.5zM288 256q-40 0-68 37.5T192 384t28 90.5t68 37.5t68-37.5t28-90.5t-28-90.5t-68-37.5zm448 0q-40 0-68 37.5T640 384t28 90.5t68 37.5t68-37.5t28-90.5t-28-90.5t-68-37.5zm64 384H224q-13 0-22.5 9.5T192 672q40 113 117.5 168.5T511 896t202.5-55.5T832 672q0-13-9.5-22.5T800 640zM511 832q-166 0-223-114q0-6 5.5-10t13.5-4h410q8 0 13.5 4t5.5 10q-57 114-225 114z"/></svg>
       </li>
       <li id="account">
+        {% if picture %}
+        <img src="../static/userpic/{{picture}}" alt="">
+        {% else %}
         <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24" fill="#87fefe"><g fill="none" fill-rule="evenodd"><path d="M24 0v24H0V0h24ZM12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036c-.01-.003-.019 0-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.016-.018Zm.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022Zm-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01l-.184-.092Z"/><path fill="#87fefe" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10s10-4.477 10-10S17.523 2 12 2ZM8.5 9.5a3.5 3.5 0 1 1 7 0a3.5 3.5 0 0 1-7 0Zm9.758 7.484A7.985 7.985 0 0 1 12 20a7.985 7.985 0 0 1-6.258-3.016C7.363 15.821 9.575 15 12 15s4.637.821 6.258 1.984Z"/></g></svg>
+        {% endif %}
       </li>
     </ul>
     
@@ -61,13 +65,64 @@
             <p>Change Profile Picture</p>
           </div>
 
-          <div class="user-image" id="user-image">
-            {% for posts in  user_posts%}
-              {% if posts.user.user_picture %} 
-                  <img src="{{url_for('static', filename='userpics' + posts.user/user_picture)}}" alt="">
-              {% endif %}
-            {%endfor%}
+    
+            {% if picture %}
+               <img src="../static/userpic/{{picture}}" alt="">
+            {%else%}
+                <div class="user-image" id="user-image">
+                </div>
+            {% endif %}
+          <div class="form-updater" id="">
+           
+
+            
+       <div class="field">
+        
+       
+          <label for="current-username" style="font-weight:bolder;">Username</label> 
+          <div class="input-group">
+            
+        
+          <input type="text" name="current-username" id="current-username" placeholder="{{username}}" disabled>
+
+          <div class="change-username" id="change-username">
+               <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><g fill="none" stroke="#87fefe" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="20" stroke-dashoffset="20" d="M3 21H21"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="20;0"/></path><path stroke-dasharray="44" stroke-dashoffset="44" d="M7 17V13L17 3L21 7L11 17H7"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.4s" dur="0.6s" values="44;0"/></path><path stroke-dasharray="8" stroke-dashoffset="8" d="M14 6L18 10"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1s" dur="0.2s" values="8;0"/></path></g></svg>
+            </div>
           </div>
+        </div>
+
+        <div class="field">
+          
+        
+          <label for="current-mail">Mail</label>
+          <div class="input-group">
+            
+          
+          <input type="text" name="current-mail" id="current-mail" placeholder="{{mail}}" disabled>
+          <div class="change-mail" id="change-mail">
+            <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><g fill="none" stroke="#87fefe" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="20" stroke-dashoffset="20" d="M3 21H21"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="20;0"/></path><path stroke-dasharray="44" stroke-dashoffset="44" d="M7 17V13L17 3L21 7L11 17H7"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.4s" dur="0.6s" values="44;0"/></path><path stroke-dasharray="8" stroke-dashoffset="8" d="M14 6L18 10"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1s" dur="0.2s" values="8;0"/></path></g></svg>
+          </div>
+          </div>
+
+        </div>
+
+        <div class="field">
+          
+        
+          <label for="current-password">Password</label>
+          <div class="input-group">
+            
+          
+          <input type="password" name="current-password" id="current-password" placeholder="secret :p" disabled>
+          <div class="change-pass" id="change-pass">
+            <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><g fill="none" stroke="#87fefe" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="20" stroke-dashoffset="20" d="M3 21H21"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="20;0"/></path><path stroke-dasharray="44" stroke-dashoffset="44" d="M7 17V13L17 3L21 7L11 17H7"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.4s" dur="0.6s" values="44;0"/></path><path stroke-dasharray="8" stroke-dashoffset="8" d="M14 6L18 10"><animate fill="freeze" attributeName="stroke-dashoffset" begin="1s" dur="0.2s" values="8;0"/></path></g></svg>
+            
+          </div>
+          </div>
+        </div>
+          <button type="button" id="update-data">Actualizar Información</button>
+           </div>
+           
         </form>
       </div>
     </div>
@@ -99,8 +154,44 @@
   const feed_container = document.getElementById('feed-container');
   const account_btn = document.getElementById('account');
   const account_block = document.getElementById('account_page');
+ 
+  let active_changes = false;
 
-  
+  document.getElementById('update-data').addEventListener("click", async (e) => {
+    e.preventDefault();
+    const response = await fetch(`/user-changes`, {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body: JSON.stringify({
+          "new-username":document.getElementById('current-username').
+          value,
+          "new-mail":document.getElementById('current-mail').value,
+          "new-pass":document.getElementById('current-password').value
+        })
+    });
+
+    const dataUpdateUser = await response.json();
+
+    if(dataUpdateUser.success2){
+      window.location.reload();
+
+    }
+    else{
+      console.log("error puta");
+    }
+
+  });
+  document.getElementById('change-username').addEventListener("click", ()=>{
+    active_changes =!active_changes;
+    if(active_changes){
+      document.getElementById('current-username').disabled = false;
+    }
+    else{
+      document.getElementById('current-username').disabled = true;
+    }
+  });
   feed_container.classList.add('active');
   account_btn.addEventListener("click",()=> {
     
@@ -108,7 +199,27 @@
     account_block.classList.add('active');
     console.log(account_block);
   });
-  
+ 
+  document.getElementById('change-mail').addEventListener("click",()=>{
+    active_changes = !active_changes;
+    if(active_changes){
+      document.getElementById('current-mail').disabled = false;
+    }
+    else{
+      document.getElementById('current-mail').disabled = true;
+    }
+  });
+
+  document.getElementById('change-pass').addEventListener("click",()=>{
+    active_changes = !active_changes;
+    if(active_changes){
+      document.getElementById('current-password').disabled = false;
+      
+    }
+    else{
+      document.getElementById('current-password').disabled = true;
+    }
+  });
   add_post.addEventListener("click", ()=> {
       addpost_form.classList.add('active');
   });
@@ -173,6 +284,7 @@
     }
     
   });
+  
 </script>
 </body>
 </html>
