@@ -8,6 +8,9 @@ import uuid
 import bcrypt
 import os
 from sqlalchemy.exc import IntegrityError
+import string
+import secrets
+from datetime import *
 app = Flask(__name__)
 app.secret_key = "dkaokoqwkj190j329jd9xn2i398d9283"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///privsocial.db"
@@ -15,7 +18,10 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///privsocial.db"
 db = SQLAlchemy(app)
 
 
-
+def generar_token(long):
+    chars = string.ascii_letters + string.digits
+    
+    return "".join(secrets.choice(chars) for _ in range(long))
 
 
 class Posts(db.Model):
@@ -173,6 +179,43 @@ class Users(db.Model):
     
 
         return userUpdate
+
+class Tokens(db.Model):
+    id_token = db.Column(
+            db.String(36),
+            primary_key = True,
+            default=lambda:str(uuid.uuid4())
+
+            )
+    token = db.Column(
+            db.String(6),
+            nullable= False,
+            default = lambda:generar_token(6)
+            )
+    type_token = db.Column(
+            db.String(200),
+            nullable = False
+            )
+    dtime_final = db.Column(
+            db.DateTime, 
+            nullable = False 
+            )
+    dtime_creation = db.Column(
+            db.DateTime,
+            nullable = False,
+            default= datetime.utcnow()
+            )
+
+    @classmethod
+    def create_token(cls, type_token, dtime_final):
+        new_token = cls(
+                type_token = type_token,
+                dtime_final = dtime_final
+                )
+        db.session.add(new_token)
+        db.session.commit()
+
+        return new_token
 class Bridge(db.Model):
 
     id_bridge = db.Column(
@@ -189,10 +232,19 @@ class Bridge(db.Model):
     id_post = db.Column(
         db.String(36),
         db.ForeignKey('posts.id_post')
+
     )
+
+    id_token = db.Column(
+            db.String(36),
+            db.ForeignKey('tokens.id_token')
+            )
+
+
 
     user = db.relationship('Users')
     post = db.relationship('Posts')
+    token = db.relationship('Tokens')
 
 
 @app.context_processor
@@ -313,10 +365,19 @@ def create_account():
         mail = data['mail']
         password = data['password']
         password = password.replace(" ","").strip().lower()
-
+       
        
 
         user = Users.create_user(name,mail,password)
+        verification_process = Tokens.create_token("email_verification", datetime.utcnow() + timedelta(minutes=15))
+        print("code: ", verification_process.token)
+        bridge = Bridge(
+                id_user = user.id,
+                id_token = verification_process.id_token
+                )
+        db.session.add(bridge)
+        db.session.commit()
+
 
         if not user:
             return {
@@ -358,9 +419,10 @@ def sign_in():
 
     return render_template('login.html')
     
-@app.route('/create-account/verification', methods=["GET", "POST"])
-def verify_email_via():
-    return render_template("verify.html")
+@app.route('/create-account/verification/<email_to>', methods=["GET", "POST"])
+def verify_email_via(email_to):
+    mail = email_to
+    return render_template("verify.html", mail = mail)
 
 
 if __name__ == "__main__":
